@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>win</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
+  <!-- Bootstrap CSS -->
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+
+  <link rel="stylesheet" href="stylewl.css">
+</head>
+<body class="win-page d-flex flex-column align-items-center">
+
+  <!-- Scoreboard -->
+  <div class="scoreBoard mb-4 text-center">
+    <div class="heading column justify-content-center mb-3">
+      <div class="col-4 rock">ROCK</div>
+      <div class="col-4 paper">PAPER</div>
+      <div class="col-4 scissors">SCISSORS</div>
+    </div>
+    <div class="score row justify-content-center">
+      <div class="col-6 col-md-4 computerScore text-center">
+        <div class="computer">COMPUTER</div>
+        <div class="score1">SCORE</div>
+        <div class="zero1">0</div> <!-- Computer score -->
+      </div>
+      <div class="col-6 col-md-4 yourScorediv text-center">
+        <div class="your">YOUR</div>
+        <div class="score2">SCORE</div>
+        <div class="zero2">0</div> <!-- Player score -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Player & Computer Choices -->
+  <div class="choice-display mb-4">
+    <div class="choice-container mb-3">
+      <div class="found">YOU PICKED</div>
+      <div class="highlight-wrapper" id="player-choice-wrapper">
+        <div id="player-choice" class="choice-box"></div>
+      </div>
+    </div>
+
+    <div id="result-text" class="result-text">
+      <h5>YOU WIN</h5>
+      <h6>AGAINST PC</h6>
+      <button class="play-again" onclick="window.location.href='index.html'">Play Again</button>
+    </div>
+
+    <div class="choice-container">
+      <div class="found">PC PICKED</div>
+      <div id="computer-choice" class="choice-box"></div>
+    </div>
+  </div>
+
+  <!-- Buttons -->
+  <div class="button-container text-center">
+    <button class="rules-btn" onclick="openRules()">Rules</button>
+    <button class="next-btn" id="next-btn" onclick="showHurray()">Next</button>
+  </div>
+
+  <!-- Rules Modal -->
+  <div class="popup" id="rules-popup">
+    <div class="close-btn" onclick="closeRules()">✕</div>
+    <h2 class="popup-title">Game Rules</h2>
+    <ul class="rules-list">
+      <li>Rock beats scissors, scissors beat paper, and paper beats rock.</li>
+      <li>Agree ahead of time whether you’ll count off “rock, paper, scissors, shoot” or just “rock, paper, scissors.”</li>
+      <li>Use rock, paper, scissors to settle minor decisions or simply play to pass the time.</li>
+      <li>If both players lay down the same hand, each player lays down another hand.</li>
+    </ul>
+  </div>
+
+  <!-- Bootstrap JS, Popper.js, and jQuery -->
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+  <!-- JavaScript -->
+  <script>
+    // Initialize scores
+    let playerScore = parseInt(localStorage.getItem('playerScore')) || 0;
+    let computerScore = parseInt(localStorage.getItem('computerScore')) || 0;
+
+    // Display the initial scores
+    const playerScoreElem = document.querySelector(".zero2");
+    const computerScoreElem = document.querySelector(".zero1");
+    playerScoreElem.textContent = playerScore;
+    computerScoreElem.textContent = computerScore;
+
+    // Load result data from localStorage
+    const player = localStorage.getItem("playerChoice");
+    const computer = localStorage.getItem("computerChoice");
+
+    const playerBox = document.getElementById("player-choice");
+    const computerBox = document.getElementById("computer-choice");
+
+    // Update displayed choices with images
+    playerBox.innerHTML = `<img src="${player}.png" alt="${player}" />`;
+    computerBox.innerHTML = `<img src="${computer}.png" alt="${computer}" />`;
+
+    // Add the choice class so the correct style applies
+    playerBox.className = `choice-box ${player}`;
+    computerBox.className = `choice-box ${computer}`;
+
+    // Add circle animation for Player's pick
+    const wrapper = document.getElementById("player-choice-wrapper");
+    wrapper.classList.add("highlight-ring");
+
+    let circleCount = 0;
+    const maxCircles = 3;
+
+    const addCircle = () => {
+      if (circleCount < maxCircles) {
+        const circle = document.createElement("div");
+        circle.classList.add("circle");
+        wrapper.insertBefore(circle, wrapper.firstChild); 
+        circleCount++;
+      } else {
+        circleCount = 0; // Reset the circle count to loop
+        const circles = wrapper.querySelectorAll('.circle');
+        circles.forEach(circle => circle.remove()); // Only remove circles, not player's image
+      }
+    };
+
+    setInterval(addCircle, 500);
+
+    // Function to update scores based on the outcome
+    function updateScores(winner) {
+      if (winner === "player") {
+        playerScore++;
+      } else if (winner === "computer") {
+        computerScore++;
+      }
+
+      // Update score elements in HTML
+      playerScoreElem.textContent = playerScore;
+      computerScoreElem.textContent = computerScore;
+
+      // Save updated scores in localStorage
+      localStorage.setItem('playerScore', playerScore);
+      localStorage.setItem('computerScore', computerScore);
+    }
+
+    // Function to open the rules popup
+    function openRules() {
+      document.getElementById("rules-popup").style.display = "block";
+    }
+
+    // Function to close the rules popup
+    function closeRules() {
+      document.getElementById("rules-popup").style.display = "none";
+    }
+
+    // Function to navigate to hurray page
+    function showHurray() {
+      window.location.href = 'hurray.html'; // Redirect to hurray page after a win
+    }
+  </script>
+
+</body>
+</html>

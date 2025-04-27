@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Hurray</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="stylewl.css">
+</head>
+<body>
+  
+
+    <div class="star1"><img src="Star_1.png" alt=""></div>
+    <div class="star2"><img src="Star_2.png" alt=""></div>
+    <div class="star3"><img src="Star_3.png" alt=""></div>
+    <div class="star4"><img src="Star_4.png" alt=""></div>
+    <div class="star5"><img src="Star_5.png" alt=""></div>
+    <div class="star6"><img src="Star_6.png" alt=""></div>
+    <div class="star7"><img src="Star_7.png" alt=""></div>
+    <div class="star9"><img src="Star_9.png" alt=""></div>
+    <div class="cup"><img src="cup.png" alt=""></div>
+
+ 
+  <!-- Player & Computer Choices -->
+  <div class="hurray-display">
+    
+    <div id="result-text" class="result-text">
+      <h1>HURRAY!!</h1>
+      <h2>YOU WON THE GAME</h2>
+      <br>
+      <br>
+      <button class="play-again" onclick="window.location.href='index.html'">Play Again</button>
+    </div>
+  </div>
+
+  <!-- Buttons -->
+  <div class="button-container">
+    
+    <button class="rules-btn" onclick="openRules()">Rules</button>
+  </div>
+
+  <!-- Rules Modal -->
+  <div class="popup" id="rules-popup">
+    <div class="close-btn" onclick="closeRules()">✕</div>
+    <h2 class="popup-title">Game Rules</h2>
+    <ul class="rules-list">
+      <li>Rock beats scissors, scissors beat paper, and paper beats rock.</li>
+      <li>Agree ahead of time whether you’ll count off “rock, paper, scissors, shoot” or just “rock, paper, scissors.”</li>
+      <li>Use rock, paper, scissors to settle minor decisions or simply play to pass the time</li>
+      <li>If both players lay down the same hand, each player lays down another hand</li>
+    </ul>
+  </div>
+<script>
+  function openRules() {
+    document.getElementById("rules-popup").style.display = "block";
+  }
+
+  // Function to close the rules popup
+  function closeRules() {
+    document.getElementById("rules-popup").style.display = "none";
+  }
+</script>
+
+</body>
+</html>

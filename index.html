@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>Rock Paper Scissors</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
+  <!-- Bootstrap CSS -->
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+
+  <link rel="stylesheet" href="stylewl.css">
+</head>
+<body class="d-flex flex-column align-items-center">
+
+  <!-- Scoreboard -->
+  <div class="scoreBoard mb-4 text-center">
+    <div class="heading column justify-content-center mb-3">
+      <div class="col-4 rock">ROCK</div>
+      <div class="col-4 paper">PAPER</div>
+      <div class="col-4 scissors">SCISSORS</div>
+    </div>
+    <div class="score row justify-content-center">
+      <div class="col-6 col-md-4 computerScore text-center">
+        <div class="computer">COMPUTER</div>
+        <div class="score1">SCORE</div>
+        <div class="zero1" id="computer-score">0</div>
+      </div>
+      <div class="col-6 col-md-4 yourScorediv text-center">
+        <div class="your">YOUR</div>
+        <div class="score2">SCORE</div>
+        <div class="zero2" id="player-score">0</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Game Area -->
+  <div class="game text-center mb-4">
+    <div class="line line1"></div>
+    <div class="line line2"></div>
+    <div class="line line3"></div>
+
+    <div class="same d-flex justify-content-center mb-4">
+      <div class="roc choice" data-choice="rock">
+        <img src="rock.png" alt="Rock" />
+      </div>
+      <div class="sic choice" data-choice="scissors">
+        <img src="scissors.png" alt="Scissors" />
+      </div>
+    </div>
+    <div class="pap choice" data-choice="paper">
+      <img src="paper.png" alt="Paper" />
+    </div>
+  </div>
+
+  <!-- Buttons -->
+  <div class="button-container text-center">
+    <button class="rules-btn" id="rules-btn">Rules</button>
+  </div>
+
+  <!-- Rules Modal -->
+  <div class="popup hidden" id="rules-modal">
+    <div class="close-btn" id="close-modal">✕</div>
+    <h2 class="popup-title">Game Rules</h2>
+    <ul class="rules-list">
+      <li>Rock beats scissors, scissors beat paper, and paper beats rock.</li>
+      <li>Agree ahead of time whether you’ll count off “rock, paper, scissors, shoot” or just “rock, paper, scissors.”</li>
+      <li>Use rock, paper, scissors to settle minor decisions or simply play to pass the time.</li>
+      <li>If both players lay down the same hand, each player lays down another hand.</li>
+    </ul>
+  </div>
+
+  <!-- Bootstrap JS, Popper.js, and jQuery -->
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+  <!-- JavaScript -->
+  <script>
+    const playerScoreEl = document.getElementById("player-score");
+    const computerScoreEl = document.getElementById("computer-score");
+    const choices = document.querySelectorAll(".choice");
+    const rulesBtn = document.getElementById("rules-btn");
+    const modal = document.getElementById("rules-modal");
+    const closeModalBtn = document.getElementById("close-modal");
+
+    let playerScore = parseInt(localStorage.getItem("playerScore")) || 0;
+    let computerScore = parseInt(localStorage.getItem("computerScore")) || 0;
+    updateScore();
+
+    const options = ["rock", "paper", "scissors"];
+
+    choices.forEach(choice => {
+      choice.addEventListener("click", () => {
+        const playerChoice = choice.dataset.choice;
+        const computerChoice = options[Math.floor(Math.random() * 3)];
+        const result = getWinner(playerChoice, computerChoice);
+
+        // Save choices and result
+        localStorage.setItem("playerChoice", playerChoice);
+        localStorage.setItem("computerChoice", computerChoice);
+        localStorage.setItem("roundResult", result);
+
+        // Save scores
+        localStorage.setItem("playerScore", playerScore);
+        localStorage.setItem("computerScore", computerScore);
+
+        // Redirect directly based on result
+        if (result === "win") {
+          window.location.href = "win.html";
+        } else if (result === "lose") {
+          window.location.href = "lose.html";
+        } else {
+          window.location.href = "lose.html"; 
+        }
+      });
+    });
+
+    function getWinner(player, computer) {
+      if (player === computer) return "draw";
+      if (
+        (player === "rock" && computer === "scissors") ||
+        (player === "scissors" && computer === "paper") ||
+        (player === "paper" && computer === "rock")
+      ) {
+        playerScore++;
+        return "win";
+      } else {
+        computerScore++;
+        return "lose";
+      }
+    }
+
+    function updateScore() {
+      playerScoreEl.textContent = playerScore;
+      computerScoreEl.textContent = computerScore;
+    }
+
+    // Rules Modal Toggle
+    rulesBtn.addEventListener("click", () => modal.classList.remove("hidden"));
+    closeModalBtn.addEventListener("click", () => modal.classList.add("hidden"));
+  </script>
+</body>
+</html>

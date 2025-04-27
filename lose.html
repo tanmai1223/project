@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <title>Game Result</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
+  <!-- Bootstrap CSS -->
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="project.css" />
+  <link rel="stylesheet" href="stylewl.css" />
+</head>
+
+<body class="lost-page d-flex flex-column align-items-center">
+
+  <!-- Scoreboard -->
+  <div class="scoreBoard text-center mb-4">
+    <div class="heading column justify-content-center mb-3">
+      <div class="col-4 rock">ROCK</div>
+      <div class="col-4 paper">PAPER</div>
+      <div class="col-4 scissors">SCISSORS</div>
+    </div>
+    <div class="score row justify-content-center">
+      <div class="col-6 col-md-4 computerScore text-center">
+        <div class="computer">COMPUTER</div>
+        <div class="score1">SCORE</div>
+        <div class="zero1" id="computer-score">0</div>
+      </div>
+      <div class="col-6 col-md-4 yourScorediv text-center">
+        <div class="your">YOUR</div>
+        <div class="score2">SCORE</div>
+        <div class="zero2" id="player-score">0</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Choices and Result -->
+  <div class="choice-display mb-4">
+    <div class="choice-container mb-3">
+      <div class="found">YOU PICKED</div>
+      <div id="player-choice" class="choice-box"></div>
+    </div>
+
+    <div id="result-text"></div>
+
+    <div class="choice-container">
+      <div class="found">PC PICKED</div>
+      <div class="highlight-wrapper">
+        <div id="computer-choice" class="choice-box"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Rules Button -->
+  <button class="rules-btn" onclick="openRules()">Rules</button>
+
+  <!-- Rules Popup -->
+  <div class="popup" id="rules-popup">
+    <div class="close-btn" onclick="closeRules()">✕</div>
+    <h2 class="popup-title">Game Rules</h2>
+    <ul class="rules-list">
+      <li>Rock beats scissors, scissors beat paper, and paper beats rock.</li>
+      <li>Agree ahead of time whether you’ll count off “rock, paper, scissors, shoot” or just “rock, paper, scissors.”</li>
+      <li>Use rock, paper, scissors to settle minor decisions or simply play to pass the time.</li>
+      <li>If both players lay down the same hand, each player lays down another hand.</li>
+    </ul>
+  </div>
+
+  <!-- Bootstrap JS, Popper.js, and jQuery -->
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+  <!-- JavaScript -->
+  <script>
+    // Load scores from localStorage
+    let playerScore = parseInt(localStorage.getItem('playerScore')) || 0;
+    let computerScore = parseInt(localStorage.getItem('computerScore')) || 0;
+
+    document.getElementById("player-score").textContent = playerScore;
+    document.getElementById("computer-score").textContent = computerScore;
+
+    const player = localStorage.getItem("playerChoice");
+    const computer = localStorage.getItem("computerChoice");
+    const result = localStorage.getItem("roundResult");
+
+    const playerBox = document.getElementById("player-choice");
+    const computerBox = document.getElementById("computer-choice");
+    const resultText = document.getElementById("result-text");
+
+    playerBox.classList.add(player);
+    computerBox.classList.add(computer);
+    playerBox.innerHTML = `<img src="${player}.png" alt="${player}" />`;
+    computerBox.innerHTML = `<img src="${computer}.png" alt="${computer}" />`;
+
+    if (result === "draw") {
+      resultText.innerHTML = `
+        <div class="result-text">
+          <h5>TIE UP</h5>
+          <h6></h6>
+          <button class="play-again" onclick="window.location.href='index.html'">Play Again</button>
+        </div>`;
+    } else if (result === "lose") {
+      resultText.innerHTML = `
+        <div class="result-text">
+          <h5>YOU LOST</h5>
+          <h6>AGAINST PC</h6>
+          <button class="play-again" onclick="window.location.href='index.html'">Play Again</button>
+        </div>`;
+
+      const wrapper = document.querySelector(".highlight-wrapper");
+      wrapper.classList.add("highlight-ring");
+
+      // Function to add a circle
+      let circleCount = 0; // Keeps track of how many circles have been added
+      const maxCircles = 3; // The total number of circles you want to show before repeating
+
+      const addCircle = () => {
+        if (circleCount < maxCircles) {
+          const circle = document.createElement("div");
+          circle.classList.add("circle");
+          wrapper.insertBefore(circle, wrapper.firstChild);  // Add circle at the beginning
+          circleCount++;
+        } else {
+          circleCount = 0; // Reset the circle count to loop
+          const circles = wrapper.querySelectorAll('.circle');
+          circles.forEach(circle => circle.remove());  // Only remove circles, not PC's image
+        }
+      };
+
+      // Set interval to repeat the circle addition every 500ms
+      setInterval(addCircle, 500);
+    } else if (result === "win") {
+      resultText.innerHTML = `
+        <div class="result-text">
+          <h5>YOU WIN</h5>
+          <h6>AGAINST PC</h6>
+          <button class="btn btn-primary play-again" onclick="window.location.href='index.html'">Play Again</button>
+        </div>`;
+    } else {
+      resultText.textContent = "Unexpected result.";
+    }
+
+    function openRules() {
+      document.getElementById("rules-popup").style.display = "block";
+    }
+
+    function closeRules() {
+      document.getElementById("rules-popup").style.display = "none";
+    }
+  </script>
+
+</body>
+
+</html>
